@@ -94,7 +94,7 @@ export function createApp({ env = process.env, fetchImpl, provider: injectedProv
       if (req.method === 'OPTIONS') { res.writeHead(204, { ...secHeaders, ...cors }); res.end(); return; }
 
       if (url.pathname.startsWith('/api/')) {
-        const ip = clientIp(req, cfg.trustProxy);
+        const ip = clientIp(req, cfg.trustProxy, cfg.trustProxyHops);
         const general = limiters.api.take(ip);
         if (!general.allowed) throw Object.assign(new HttpError(429, 'rate_limited', 'too many requests'), { retryAfter: general.retryAfterSec });
         const route = router.match(req.method === 'HEAD' ? 'GET' : req.method, url.pathname);

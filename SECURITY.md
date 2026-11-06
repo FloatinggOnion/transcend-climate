@@ -26,7 +26,10 @@ script, or change anything outside the map state.
 | Supply chain | See `docs/SUPPLY-CHAIN.md` |
 
 ## Deployment checklist
-1. Terminate TLS in front (Caddy/nginx/Cloudflare); set `TRUST_PROXY=true` only behind one.
+1. Terminate TLS in front (Caddy/nginx/Cloudflare); set `TRUST_PROXY=true` only behind one, and set
+   `TRUST_PROXY_HOPS` to how many proxies you run (default 1). The client IP is read that many
+   entries from the right of `X-Forwarded-For`; the left side is client-controlled and is ignored.
+   Make sure the server port is reachable only through the proxy.
 2. Set `HOST=0.0.0.0` **and** `ALLOWED_HOSTS=your.domain` when exposing it.
 3. Set `GEOCODER_USER_AGENT` to something that identifies you (OSM policy).
 4. Set a provider-side spend limit on any LLM key, in addition to `NLP_DAILY_REQUEST_BUDGET`.

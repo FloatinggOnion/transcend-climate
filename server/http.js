@@ -58,10 +58,18 @@ export function securityHeaders(cfg) {
 
 // ───────────────────────── request helpers ─────────────────────────
 
-export function clientIp(req, trustProxy) {
+export function clientIp(req, trustProxy, hops = 1) {
   if (trustProxy) {
-    const xff = req.headers['x-forwarded-for'];
-    if (typeof xff === 'string' && xff) return xff.split(',')[0].trim();
+    const raw = req.headers['x-forwarded-for'];
+    if (typeof raw === 'string' && raw) {
+      // Every trusted proxy appends the address it received the request from, so the
+      // LEFT side is whatever the client chose to send. Count `hops` entries in from
+      // the right. Too few entries means the request skipped the expected proxies:
+      // fall through to the socket address rather than trust anything.
+      const chain = raw.split(',').map((s) => s.trim()).filter(Boolean);
+      const hit = chain[chain.length - hops];
+      if (hit) return hit.slice(0, 64);
+    }
   }
   return req.socket?.remoteAddress || 'unknown';
 }

@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { createSafeFetch, UpstreamError } from './safeFetch.js';
 import { createCache } from './cache.js';
 import { createRateLimiter, createDailyBudget } from './rateLimit.js';
-import { safeResolve, buildCsp, hostAllowed } from './http.js';
+import { safeResolve, buildCsp, hostAllowed, clientIp } from './http.js';
 import { loadConfig, resolveNlpProvider } from './config.js';
 
 const res = (body, init = {}) => new Response(body, init);
@@ -153,4 +153,37 @@ test('config: defaults are keyless; invalid numbers fail loudly; provider auto-s
   const forced = resolveNlpProvider(loadConfig({ NLP_PROVIDER: 'anthropic' }));
   assert.equal(forced.name, 'offline');
   assert.match(forced.reason, /credentials/);
+});
+
+// ───────────── client IP behind a proxy ─────────────
+const fakeReq = (xff, remote = '10.0.0.9') => ({ headers: xff === undefined ? {} : { 'x-forwarded-for': xff }, socket: { remoteAddress: remote } });
+
+test('clientIp: ignores X-Forwarded-For unless a proxy is trusted', () => {
+  assert.equal(clientIp(fakeReq('6.6.6.6'), false), '10.0.0.9');
+});
+
+test('clientIp: one trusted hop reads the RIGHT-most entry, so a spoofed left side changes nothing', () => {
+  // client sent "1.2.3.4"; our proxy appended the real peer 203.0.113.7
+  assert.equal(clientIp(fakeReq('1.2.3.4, 203.0.113.7'), true, 1), '203.0.113.7');
+  // rotating the forged value must not rotate the identity used for rate limiting
+  assert.equal(clientIp(fakeReq('9.9.9.9, 8.8.8.8, 203.0.113.7'), true, 1), '203.0.113.7');
+});
+
+test('clientIp: N hops counts N entries in from the right', () => {
+  // CDN (198.51.100.2) -> nginx; nginx saw the CDN, the CDN saw the client 203.0.113.7
+  assert.equal(clientIp(fakeReq('forged, 203.0.113.7, 198.51.100.2'), true, 2), '203.0.113.7');
+});
+
+test('clientIp: too few entries or no header falls back to the socket, never to attacker input', () => {
+  assert.equal(clientIp(fakeReq('203.0.113.7'), true, 2), '10.0.0.9');
+  assert.equal(clientIp(fakeReq(undefined), true, 1), '10.0.0.9');
+  assert.equal(clientIp(fakeReq(' , ,'), true, 1), '10.0.0.9');
+  assert.equal(clientIp(fakeReq('x'.repeat(500)), true, 1).length, 64, 'entry is length-capped');
+});
+
+test('config: TRUST_PROXY_HOPS defaults to 1 and rejects nonsense', () => {
+  assert.equal(loadConfig({}).trustProxyHops, 1);
+  assert.equal(loadConfig({ TRUST_PROXY_HOPS: '2' }).trustProxyHops, 2);
+  assert.throws(() => loadConfig({ TRUST_PROXY_HOPS: '0' }), /TRUST_PROXY_HOPS/);
+  assert.throws(() => loadConfig({ TRUST_PROXY_HOPS: 'many' }), /TRUST_PROXY_HOPS/);
 });

@@ -22,6 +22,9 @@ export function loadConfig(env = process.env) {
     port: int(env, 'PORT', 8787, { min: 0, max: 65535 }),
     // Reverse-proxy awareness. Only trust X-Forwarded-For if you actually sit behind one.
     trustProxy: str(env, 'TRUST_PROXY') === 'true',
+    // How many proxies you run in front (1 = a single Caddy/nginx; 2 = CDN + nginx). The client
+    // address is taken that many entries from the RIGHT of X-Forwarded-For.
+    trustProxyHops: int(env, 'TRUST_PROXY_HOPS', 1, { min: 1, max: 10 }),
     corsOrigins: list(env, 'CORS_ORIGINS'),
     // Hostnames the server answers to (DNS-rebinding guard). Empty = loopback only when bound to loopback.
     allowedHosts: list(env, 'ALLOWED_HOSTS'),

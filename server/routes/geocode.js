@@ -6,12 +6,19 @@
 //    User-Agent, ≤ 1 request/second (serialised here), aggressive caching.
 //    Results are © OpenStreetMap contributors (ODbL).
 
-import { haversineKm, normalize } from '../../shared/gazetteer.js';
+import { haversineKm } from '../../shared/gazetteer.js';
 import { HttpError } from '../http.js';
 
 const NOMINATIM = 'https://nominatim.openstreetmap.org/search';
 const MIN_GAP_MS = 1100;
 const MAX_QUEUE = 4;
+
+/**
+ * What we both cache on and send upstream: trimmed, lower-cased, whitespace-collapsed.
+ * Deliberately NOT shared/gazetteer normalize(): that also drops accents and punctuation,
+ * which would make the key coarser than the request.
+ */
+export const canonicalQuery = (q) => String(q ?? '').trim().toLowerCase().replace(/\s+/g, ' ');
 
 /** Map a Nominatim hit to our result shape; null if unusable. */
 export function nominatimToResult(hit) {
@@ -49,8 +56,11 @@ export function registerGeocodeRoutes({ router, ctx }) {
   }
 
   /** Remote lookup, cached for a month. Shared with the NLP place resolver via ctx. */
-  ctx.geocodeRemote = ctx.cfg.geocoder.mode === 'off' ? null : async (q) => {
-    const { value } = await ctx.cache.wrap(`geo:${normalize(q)}`, { ttlMs: 30 * 86400e3, staleMs: 365 * 86400e3, persist: true }, () => throttled(async () => {
+  ctx.geocodeRemote = ctx.cfg.geocoder.mode === 'off' ? null : async (rawQuery) => {
+    // The cache key and the upstream request use the SAME string, so one spelling can
+    // never fill the cache entry that another spelling is then served from.
+    const q = canonicalQuery(rawQuery);
+    const { value } = await ctx.cache.wrap(`geo:${q}`, { ttlMs: 30 * 86400e3, staleMs: 365 * 86400e3, persist: true }, () => throttled(async () => {
       const res = await ctx.safeFetch(`${NOMINATIM}?q=${encodeURIComponent(q)}&format=jsonv2&limit=5&addressdetails=0`, {
         headers: { 'user-agent': ctx.cfg.geocoder.userAgent, 'accept-language': 'en' }, timeoutMs: 15_000,
       });

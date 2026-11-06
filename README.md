@@ -56,7 +56,7 @@ placeholder parity.
 ## Commands
 
 ```sh
-pnpm test              # 137 tests: server, NLP, i18n, state codec, parsers
+pnpm test              # 143 tests: server, NLP, i18n, state codec, parsers
 pnpm check:i18n        # locale parity
 pnpm check:provenance  # ported files still match the audited originals
 pnpm audit:deps        # CVEs + malware + publisher/age/provenance checks

@@ -4,7 +4,7 @@ import { parseGibsCapabilities } from './gibs.js';
 import { buildClimateSummary, snapToGrid } from './climate.js';
 import { normalizeAsset } from './emissions.js';
 import { parseBbox, selectStations, latestPm25, pm25Band } from './airquality.js';
-import { nominatimToResult } from './geocode.js';
+import { nominatimToResult, canonicalQuery } from './geocode.js';
 import { CAPS, climatology, monthly } from '../../test/fixtures.js';
 
 // ───────── GIBS capabilities ─────────
@@ -94,7 +94,16 @@ test('nominatim hits map to results; garbage is dropped', () => {
   const r = nominatimToResult({ name: 'Ikeja', display_name: 'Ikeja, Lagos, Nigeria', lat: '6.6018', lon: '3.3515', boundingbox: ['6.5', '6.7', '3.2', '3.4'], addresstype: 'suburb' });
   assert.equal(r.source, 'nominatim');
   assert.ok(r.altKm >= 40 && r.altKm <= 7000);
-  assert.equal(nominatimToResult({ lat: 'x', lon: '1' }), null);
-  assert.equal(nominatimToResult({ lat: '95', lon: '1' }), null);
+  assert.equal(nominatimToResult({ lat: 'x', lon: '1' }), null);  assert.equal(nominatimToResult({ lat: '95', lon: '1' }), null);
   assert.equal(nominatimToResult(null), null);
+});
+
+test('geocode cache key is exactly what is sent upstream (accents and punctuation are kept)', () => {
+  assert.equal(canonicalQuery('  Ibadán   Nigeria '), 'ibadán nigeria');
+  // spellings that shared a cache entry under normalize() must now be distinct keys
+  assert.notEqual(canonicalQuery('Ibadán'), canonicalQuery('Ibadan'));
+  assert.notEqual(canonicalQuery('Lagos, Texas'), canonicalQuery('Lagos Texas'));
+  assert.equal(canonicalQuery('KANO'), canonicalQuery(' kano'));
+  assert.equal(canonicalQuery('القاهرة'), 'القاهرة', 'non-Latin scripts pass through intact');
+  assert.equal(canonicalQuery(undefined), '');
 });
