@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Transcend Climate">
+  <circle cx="32" cy="32" r="28" fill="#0f2a3d"/>
+  <circle cx="32" cy="32" r="28" fill="none" stroke="#4fb3a6" stroke-width="3"/>
+  <path d="M10 30c8-2 10 4 17 2s7-9 14-8 8 6 13 6" fill="none" stroke="#f2c230" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M12 41c7-2 11 3 18 1s9-6 15-5 6 3 9 3" fill="none" stroke="#e8643f" stroke-width="3.5" stroke-linecap="round"/>
+</svg>

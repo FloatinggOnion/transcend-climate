@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="Open climate monitoring globe for Nigeria and Africa: satellite weather, vegetation, air quality, forest loss and facility emissions, with multilingual natural-language control." />
+  <meta name="theme-color" content="#0b1219" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <title>Transcend Climate</title>
+</head>
+<body>
+  <div id="app">
+    <div id="globe" class="globe" role="application" aria-label="Interactive climate globe"></div>
+    <header id="topbar" class="topbar"></header>
+    <aside id="panel" class="panel" aria-label="Layers and map options"></aside>
+    <section id="timebar" class="timebar" aria-label="Date"></section>
+    <section id="chat" class="chat" aria-label="Ask the globe"></section>
+    <div id="cards" class="cards" aria-live="polite"></div>
+    <div id="credits" class="credits"></div>
+    <div id="toasts" class="toasts" role="status" aria-live="polite"></div>
+  </div>
+
+  <div id="loading" class="loading" role="status">
+    <div class="loading-box">
+      <div class="spinner" aria-hidden="true"></div>
+      <p class="loading-text" data-i18n="loading">Loading the globe…</p>
+    </div>
+  </div>
+
+  <noscript><p class="noscript" data-i18n="noscript">Transcend Climate needs JavaScript to run.</p></noscript>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

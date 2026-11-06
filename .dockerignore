@@ -1,0 +1,10 @@
+node_modules
+dist
+.tc-cache
+.env
+.env.*
+!.env.example
+.git
+docs
+*.log
+.DS_Store

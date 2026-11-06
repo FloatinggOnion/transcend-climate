@@ -1,0 +1,90 @@
+{
+  "upstream": "https://github.com/bilawalsidhu/gods-eye-view",
+  "upstreamCommit": "880a672b5e16ad3e41d318801d3a5203f9201923",
+  "commitSubject": "Release God's Eye View as open source (author Bilawal Sidhu, 2026-08-24)",
+  "verifiedAs": "ancestor of upstream main (GitHub compare: status=ahead, merge_base=this commit); local tree byte-identical to the iitimii fork main tarball",
+  "license": "MIT, Copyright (c) 2026 Bilawal Sidhu",
+  "note": "Patterns (not files) also adapted: viewer bootstrap (src/engine/viewer.js), layer feed-state vocabulary. Everything else is new.",
+  "files": [
+    {
+      "source": "src/renderGovernor.js",
+      "sourceSha256": "d74eeb372e66281760bfa7e2cf4d757e4f4c235447210761caae0f9f6f503bf0",
+      "dest": "src/engine/renderGovernor.js",
+      "destSha256": "d74eeb372e66281760bfa7e2cf4d757e4f4c235447210761caae0f9f6f503bf0",
+      "status": "verbatim",
+      "identical": true
+    },
+    {
+      "source": "src/renderGovernor.test.mjs",
+      "sourceSha256": "7321f59cfbc7a12097c83fb0bd17d478e4c92367feacb1e01702da7272038833",
+      "dest": "src/engine/renderGovernor.test.js",
+      "destSha256": "7321f59cfbc7a12097c83fb0bd17d478e4c92367feacb1e01702da7272038833",
+      "status": "verbatim",
+      "identical": true
+    },
+    {
+      "source": "src/data/retryableLoad.js",
+      "sourceSha256": "5db6e741c395d3faaff57f78385c1b0ac82616678a60ab5ab34da10bdeefd31c",
+      "dest": "src/engine/retryableLoad.js",
+      "destSha256": "5db6e741c395d3faaff57f78385c1b0ac82616678a60ab5ab34da10bdeefd31c",
+      "status": "verbatim",
+      "identical": true
+    },
+    {
+      "source": "src/data/retryableLoad.test.mjs",
+      "sourceSha256": "80ce0cf79b3ebed75d00f80d64e8b1000ad97ac4918b897e1d72bf131158a028",
+      "dest": "src/engine/retryableLoad.test.js",
+      "destSha256": "80ce0cf79b3ebed75d00f80d64e8b1000ad97ac4918b897e1d72bf131158a028",
+      "status": "verbatim",
+      "identical": true
+    },
+    {
+      "source": "src/data/local_data/natural_earth/regions.json",
+      "sourceSha256": "0c7652965095db0365a9bdf3170994b48e0138a781ab4110af533f42fe9f48c7",
+      "dest": "src/geo/data/regions.json",
+      "destSha256": "0c7652965095db0365a9bdf3170994b48e0138a781ab4110af533f42fe9f48c7",
+      "status": "verbatim",
+      "identical": true
+    },
+    {
+      "source": "src/data/local_data/natural_earth/marine.json",
+      "sourceSha256": "3fd509366f15ab086755a62a99150f65da407572e48ad4c602172fea716fa74f",
+      "dest": "src/geo/data/marine.json",
+      "destSha256": "3fd509366f15ab086755a62a99150f65da407572e48ad4c602172fea716fa74f",
+      "status": "verbatim",
+      "identical": true
+    },
+    {
+      "source": "src/data/local_data/natural_earth/README.md",
+      "sourceSha256": "5c8d4073e7490fbcbb0943b722df0b5a3f54fa8a8eca0498577161c425f9cf51",
+      "dest": "src/geo/data/README.md",
+      "destSha256": "5c8d4073e7490fbcbb0943b722df0b5a3f54fa8a8eca0498577161c425f9cf51",
+      "status": "verbatim",
+      "identical": true
+    },
+    {
+      "source": "src/data/naturalEarthRegions.js",
+      "sourceSha256": "de885ccea4787784d9741aacec44f165dd757c9539575e47b7f6121273c85235",
+      "dest": "src/geo/naturalEarthRegions.js",
+      "destSha256": "12dcd9b54314b52efe7e3ff4680e7bb9020fac2c7df3529f8e558ed17cbc11ac",
+      "status": "modified: data/import paths, African aliases",
+      "identical": false
+    },
+    {
+      "source": "src/data/naturalEarthRegions.test.mjs",
+      "sourceSha256": "237af5e3350fafc7f79974f5af4a64962e25fa657c0dc127092b1bcfa7793e56",
+      "dest": "src/geo/naturalEarthRegions.test.js",
+      "destSha256": "38a94148f7d390bf6f087beb9c9cefa799f19a18a3ca671717e687776230c138",
+      "status": "modified: data path, African-region tests",
+      "identical": false
+    },
+    {
+      "source": "src/mapStackController.js",
+      "sourceSha256": "3c37462a37624c37866472eff27e1464ce573314a469f7f0253fcbd9463d97b1",
+      "dest": "src/engine/mapStack.js",
+      "destSha256": "5cbe9a5ad0bbefc255d43948fbcced4a5cca6f9359592d221936e17a31527a47",
+      "status": "modified: keyless NASA GIBS default stack, native reference overlay hook, optional Google/ion/OSM stacks",
+      "identical": false
+    }
+  ]
+}

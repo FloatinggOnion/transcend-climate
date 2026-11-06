@@ -1,0 +1,20 @@
+# pnpm supply-chain hardening. This project was deliberately set up after a
+# wave of npm compromises; every setting here exists to shrink that attack
+# surface. Do not loosen these without reading docs/SUPPLY-CHAIN.md.
+
+# Refuse any package version published less than 7 days ago (value is minutes).
+# Most malicious publishes are detected and pulled within days.
+minimumReleaseAge: 10080
+
+# No dependency may be fetched from a git URL or tarball URL.
+blockExoticSubdeps: true
+
+# Fail the install if any dependency wants to run a build/postinstall script
+# that has not been explicitly allowed below. The allow-list is intentionally
+# empty: nothing in this tree needs to execute code at install time.
+strictDepBuilds: true
+onlyBuiltDependencies: []
+
+# Fail if a package's provenance/trust level DROPS compared to a prior release
+# (a common signature of a hijacked maintainer account).
+trustPolicy: no-downgrade
